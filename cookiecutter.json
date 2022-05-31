@@ -1,0 +1,9 @@
+{
+    "project_name": "Project Name",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
+    "author_name": "Jochem H. Smit",
+    "description": "A short description of the project.",
+    "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
+    "yymmdd": "{% now 'local', '%y%m%d' %}",
+    "_extensions": ["jinja2_time.TimeExtension"]
+}
