@@ -6,6 +6,8 @@ Cookiecutter for creating a project structure facilitating reproducible analysis
 
 The directory structure of your new project looks like this: 
 
+```
+
 ├── LICENSE
 ├── Makefile           <- Makefile with commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
@@ -48,3 +50,5 @@ The directory structure of your new project looks like this:
 ├── tasks              <- invoke tasks for black/mypy/flake
 │
 └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+
+```

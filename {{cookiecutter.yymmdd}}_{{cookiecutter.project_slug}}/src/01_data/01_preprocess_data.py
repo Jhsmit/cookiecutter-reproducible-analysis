@@ -1,17 +1,8 @@
 #%%
-from hal.paths import PATHS
+from hal.config import cfg
 from hal.repro import reproduce
-from hal.util import longpath
-from typing import Union
 from functools import partial
 from pathlib import Path
-import shutil
-from dask.distributed import Client, progress
-import numpy as np
-from tools.process import process_ptu_file
-import yaml
-
-#%%
 
 
 #%%
@@ -26,9 +17,7 @@ OVERWRITE = False
 z = 1
 OUTPUT_PATH = longpath(PATHS.output / "bursts" / str(z).zfill(5))
 SCRIPT_PATH = Path(__file__).absolute()
-reproduce(SCRIPT_PATH, OUTPUT_PATH, globals(), packages=packages)
-
-BS_KWARGS = {"T": 500e-6, "L": 50, "M": 35}
+reproduce(SCRIPT_PATH, OUTPUT_PATH, globals(), packages=packages) #is __file__ in globals?
 
 
 #%%
@@ -36,10 +25,6 @@ BS_KWARGS = {"T": 500e-6, "L": 50, "M": 35}
 ptu_files = PATHS.input_path.glob("**/*.ptu")
 ptu_files = [longpath(pth) for pth in ptu_files]
 
-#%%
-
-# single run:
-# props = process_ptu_file(ptu_files[0], PATHS.input_path, OUTPUT_PATH, **BS_KWARGS)
 
 client = Client("127.0.0.1:53254")
 

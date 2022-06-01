@@ -41,9 +41,9 @@ def reproduce(
         raise ValueError(
             f"Reproducibility directory should only have 1 .py file, got {len(py_files)}"
         )
-    elif len(py_files) == 1 and py_files[0].name != script_path.name:
-        text = f"Override existing result from script {py_files[0].name!r}?"
-        confirm = click.confirm(text, default=False)
+    elif len(py_files) == 1:
+        text = f"Override previous_result?"
+        confirm = click.confirm(text, default=True)
         if not confirm:
             return
 
@@ -68,7 +68,7 @@ def reproduce(
 
     packages = ",".join(sorted(combined))
     dave_kwargs = dict(
-        author="Jochem H. Smit",
+        author="{{ cookiecutter.author_name }}",
         current_time=True,
         current_date=True,
         timezone=True,

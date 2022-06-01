@@ -1,1 +1,1 @@
-from .base import load
+from .base import load_pplt_config
