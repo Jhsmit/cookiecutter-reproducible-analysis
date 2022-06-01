@@ -1,0 +1,9 @@
+paths:
+  external_data: ''  # Optional path for external data
+
+
+cluster:
+  address: 127.0.0.1:53254
+  n_workers: 4
+  threads_per_worker: 1
+  memory_limit: 8GB

@@ -1,0 +1,9 @@
+paper:
+  font.family: Arial
+  font.size: 7
+ppt:
+  font.family: Arial
+  font.size: 25
+  meta.width: 2
+  tick.len: 10
+
