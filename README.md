@@ -1,6 +1,13 @@
 # cookiecutter-reproducible-analysis
 Cookiecutter for creating a project structure facilitating reproducible analysis 
 
+This is a derivation of: https://github.com/drivendata/cookiecutter-data-science
+
+https://github.com/mkrapp/cookiecutter-reproducible-science
+
+https://github.com/timtroendle/cookiecutter-reproducible-research
+
+TODO: check for env name being the same as last run / file in the environment.yml file
 
 ### The resulting directory structure
 

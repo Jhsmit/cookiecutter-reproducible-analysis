@@ -33,6 +33,7 @@ def mypy():
     if result[0]:
         print(result[0])
 
+
 @app.command()
 def export_env(
                filename: str = 'environment.yml',
@@ -42,12 +43,7 @@ def export_env(
                from_history: bool = False):
 
     env_name = Path(os.environ["CONDA_PREFIX"]).name
-
-    print(env_name)
-
     output_pth = Path(__file__).parent / "env"
-    print(__file__)
-    print(output_pth)
 
     command_string = (
         f"conda env export --name {env_name} --file {output_pth / filename}"

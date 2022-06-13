@@ -5,18 +5,22 @@ from dataclasses import dataclass
 from omegaconf import OmegaConf
 
 
+
 @dataclass
 class Paths(object):
-    root: Optional[Path]
+    root: Path
     """Absolute path of the root directory"""
 
-    output: Optional[Path]
+    output: Path
     """Absolute path of the output directory"""
 
-    src: Optional[Path]
+    data: Path
+    """Absolute path of the data (input) directory"""
+
+    src: Path
     """Absolute path of the src directory"""
 
-    figures: Optional[Path]
+    figures: Path
     """Absolute path of figure output directory"""
 
 
@@ -30,6 +34,7 @@ root = Path(__file__).parent.parent.absolute()
 PATHS = Paths(
     root=root,
     output=root / "output",
+    data=root / "data",
     src=root / "src",
     figures=root / "report" / "figures",
 )
@@ -40,7 +45,6 @@ root_cfg = OmegaConf.load(PATHS.root / "config.yaml")
 
 # Convert entries in `paths` section to pathlib.Path objects
 for k, v in root_cfg["paths"].items():
-    print(k, v)
     root_cfg["paths"][k] = Path(v)
 path_cfg = OmegaConf.structured(toplevel)
 

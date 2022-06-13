@@ -1,0 +1,5 @@
+omegaconf>=2.2.1
+click
+typer
+invoke
+watermark
