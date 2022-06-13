@@ -1,8 +1,9 @@
-import shutil
-from pathlib import Path
-from io import StringIO, BytesIO
-import re
 import json
+import re
+import shutil
+from io import BytesIO, StringIO
+from pathlib import Path
+
 import pandas as pd
 import yaml
 

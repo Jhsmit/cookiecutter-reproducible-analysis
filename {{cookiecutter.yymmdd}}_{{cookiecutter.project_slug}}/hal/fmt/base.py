@@ -1,7 +1,6 @@
-from omegaconf import OmegaConf
 import proplot as pplt
 from hal.config import cfg
-
+from omegaconf import OmegaConf
 
 CBAR_WIDTH = 5 / 25.4
 

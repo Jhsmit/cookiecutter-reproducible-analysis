@@ -1,11 +1,11 @@
-import warnings
-from typing import Union, Optional
-
-from dask.distributed import LocalCluster, Client
-from hal.config import cfg
 import time
-from omegaconf.dictconfig import DictConfig
+import warnings
+from typing import Optional, Union
+
+from dask.distributed import Client, LocalCluster
+from hal.config import cfg
 from omegaconf import OmegaConf
+from omegaconf.dictconfig import DictConfig
 
 kwargs = {"threads_per_worker": 1, "memory_limit": "25GB"}
 

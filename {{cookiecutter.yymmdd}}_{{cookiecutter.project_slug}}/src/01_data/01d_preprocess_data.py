@@ -1,11 +1,11 @@
 #%%
 # from hal.config import cfg
 # from hal.repro import reproduce
-from hal.fileIO import dataframe_to_file
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from hal.fileIO import dataframe_to_file
 
 #%%
 
@@ -32,4 +32,4 @@ col_names = [f"col_{c}" for c in range(NUM)]
 data = rng.rand(30, NUM)
 df = pd.DataFrame(data, columns=col_names)
 
-dataframe_to_file(df, OUTPUT_PATH / 'gen_data.csv', fmt='csv')
+dataframe_to_file(df, OUTPUT_PATH / "gen_data.csv", fmt="csv")

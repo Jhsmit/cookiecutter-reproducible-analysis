@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from hal.config import cfg
 import invoke
+from hal.config import cfg
 
 context = invoke.Context()
 
@@ -32,12 +32,14 @@ def run_isort() -> None:
     command_string = f"isort --profile black {cfg.paths.src}"
     context.run(command_string, echo=True)
 
+
 def export_env(
-               filename: Optional[str] = None,
-               override_channels: bool = False,
-               no_builds: bool = False,
-               ignore_channels: bool = False,
-               from_history: bool = False):
+    filename: Optional[str] = None,
+    override_channels: bool = False,
+    no_builds: bool = False,
+    ignore_channels: bool = False,
+    from_history: bool = False,
+):
 
     env_name = Path(os.environ["CONDA_PREFIX"]).name
 
@@ -59,4 +61,3 @@ def export_env(
         command_string += " --from-history"
 
     context.run(command_string)
-

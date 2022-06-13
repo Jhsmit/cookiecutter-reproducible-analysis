@@ -1,10 +1,11 @@
-import click
-from hal.tasks import *
-from hal.config import cfg
-from hal.cluster import blocking_cluster
 import textwrap
 
-if __name__ == '__main__':
+import click
+from hal.cluster import blocking_cluster
+from hal.config import cfg
+from hal.tasks import *
+
+if __name__ == "__main__":
 
     # implement OOP; recursive until hitting some callable?
     # if only one option -> do that immediatly
@@ -26,10 +27,10 @@ if __name__ == '__main__':
         # 1 run all (+start all clusters ? )
 
         # 2 per script
-            # 1. data
-            # 2. model
-            # 3. view
-                # 01 ....
+        # 1. data
+        # 2. model
+        # 3. view
+        # 01 ....
     elif value == 2:
         q = "Which cluster?"
         options = list(cfg.clusters.keys())
@@ -39,7 +40,7 @@ if __name__ == '__main__':
         value = click.prompt(text, type=int)
 
         cluster_cfg = cfg.clusters[options[value - 1]]
-        #todo move blocking part here
+        # todo move blocking part here
         blocking_cluster(cluster_cfg)
 
     elif value == 3:

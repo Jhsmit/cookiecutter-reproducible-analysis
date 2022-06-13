@@ -1,14 +1,15 @@
-import sys
-from types import ModuleType
-from typing import Union, Generator, Optional, Iterable
-import watermark
-import shutil
-import click
-from pathlib import Path
 import distutils.sysconfig as sysconfig
+import os
+import shutil
+import sys
+from pathlib import Path
+from types import ModuleType
+from typing import Generator, Iterable, Optional, Union
+
+import click
+import watermark
 from hal.config import cfg
 from hal.tasks import export_env
-import os
 
 
 def gen_imports(globals_: dict) -> Generator:
@@ -34,11 +35,11 @@ def reproduce(
     rpr_path.mkdir(exist_ok=True, parents=True)
 
     env_name = Path(os.environ["CONDA_PREFIX"]).name
-    env_file = cfg.paths.root / 'env' / f"{env_name}.yaml"
+    env_file = cfg.paths.root / "env" / f"{env_name}.yaml"
     if not env_file.exists():
         export_env()
 
-    script_path = Path(globals_['__file__'])
+    script_path = Path(globals_["__file__"])
     script_target = rpr_path / script_path.name
 
     py_files = list(rpr_path.glob("*.py"))
@@ -67,7 +68,7 @@ def reproduce(
     combined -= stdlib
 
     # Remove hal
-    combined -= {'hal'}
+    combined -= {"hal"}
 
     packages = ",".join(sorted(combined))
     dave_kwargs = dict(
