@@ -5,5 +5,8 @@
     "description": "A short description of the project.",
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
     "yymmdd": "{% now 'local', '%y%m%d' %}",
-    "_extensions": ["jinja2_time.TimeExtension"]
+    "_extensions": ["jinja2_time.TimeExtension"],
+    "_copy_without_render": [
+        "*.ipynb"
+    ]
 }
