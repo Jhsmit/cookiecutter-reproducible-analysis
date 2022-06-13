@@ -1,23 +1,21 @@
-#%%
+import numpy as np
+import pandas as pd
+import proplot as pplt
+import yaml
 
 from hal.config import cfg
-from hal.fmt import load_pplt_config
+from hal.fileIO import csv_to_dataframe
 from hal.repro import reproduce
 
-from pathlib import Path
+# %%
 
-#%%
+load_pplt_config("paper")
 
 # List additional dependencies to log
 packages = [
-    "dont_fret",
+    "numpy",
 ]
 
-
-load_pplt_config()
-
-OUTPUT_PATH = cfg.paths.figures / __file__.stem
-OUTPUT_PATH.mkdir(exists_ok=True, parents=True)
-
-SCRIPT_PATH = Path(__file__).absolute()
-reproduce(SCRIPT_PATH, OUTPUT_PATH, globals(), packages=packages) #is __file__ in globals?
+OUTPUT_PATH = cfg.paths.output / Path(__file__).stem
+FIGURE_OUTPUT_PATH = cfg.paths.figures / Path(__file__).stem
+reproduce(OUTPUT_PATH, globals(), packages=packages)

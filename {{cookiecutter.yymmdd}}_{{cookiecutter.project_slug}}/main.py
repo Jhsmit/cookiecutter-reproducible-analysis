@@ -7,7 +7,6 @@ from pathlib import Path
 import black as black_module
 from mypy import api as mypy_api
 
-import subprocess
 import invoke
 
 app = typer.Typer()
@@ -32,7 +31,6 @@ def mypy():
     result = mypy_api.run(['.'])
     if result[0]:
         print(result[0])
-
 
 @app.command()
 def export_env(

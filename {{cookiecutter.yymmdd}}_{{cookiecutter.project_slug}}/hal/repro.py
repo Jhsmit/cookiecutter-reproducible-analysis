@@ -5,9 +5,9 @@ import watermark
 import shutil
 import click
 from pathlib import Path
-from datetime import datetime
 import distutils.sysconfig as sysconfig
 from hal.config import cfg
+from hal.tasks import export_env
 import os
 
 
@@ -24,7 +24,6 @@ def gen_imports(globals_: dict) -> Generator:
 
 
 def reproduce(
-    script_path: Path,
     output_path: Path,
     globals_: dict,
     packages: Optional[Iterable[str]] = None,
@@ -34,6 +33,12 @@ def reproduce(
     rpr_path = output_path / "_rpr"
     rpr_path.mkdir(exist_ok=True, parents=True)
 
+    env_name = Path(os.environ["CONDA_PREFIX"]).name
+    env_file = cfg.paths.root / 'env' / f"{env_name}.yaml"
+    if not env_file.exists():
+        export_env()
+
+    script_path = Path(globals_['__file__'])
     script_target = rpr_path / script_path.name
 
     py_files = list(rpr_path.glob("*.py"))
@@ -41,11 +46,6 @@ def reproduce(
         raise ValueError(
             f"Reproducibility directory should only have 1 .py file, got {len(py_files)}"
         )
-    elif len(py_files) == 1:
-        text = f"Override previous_result?"
-        confirm = click.confirm(text, default=True)
-        if not confirm:
-            return
 
     # Copy source script
     shutil.copy(script_path, script_target)
@@ -66,9 +66,12 @@ def reproduce(
     stdlib = {p.stem.replace(".py", "") for p in Path(stdlib_pth).iterdir()}
     combined -= stdlib
 
+    # Remove hal
+    combined -= {'hal'}
+
     packages = ",".join(sorted(combined))
     dave_kwargs = dict(
-        author="{{ cookiecutter.author_name }}",
+        author="Jochem H. Smit",
         current_time=True,
         current_date=True,
         timezone=True,

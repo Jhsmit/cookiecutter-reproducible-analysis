@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from omegaconf import OmegaConf
 
 
-
 @dataclass
 class Paths(object):
     root: Path
@@ -14,11 +13,11 @@ class Paths(object):
     output: Path
     """Absolute path of the output directory"""
 
-    data: Path
-    """Absolute path of the data (input) directory"""
-
     src: Path
     """Absolute path of the src directory"""
+
+    report: Path
+    """Absolute path of the report directory"""
 
     figures: Path
     """Absolute path of figure output directory"""
@@ -34,8 +33,8 @@ root = Path(__file__).parent.parent.absolute()
 PATHS = Paths(
     root=root,
     output=root / "output",
-    data=root / "data",
     src=root / "src",
+    report=root / "report",
     figures=root / "report" / "figures",
 )
 

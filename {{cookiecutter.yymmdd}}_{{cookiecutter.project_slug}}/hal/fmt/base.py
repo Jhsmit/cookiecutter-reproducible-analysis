@@ -1,10 +1,12 @@
 from omegaconf import OmegaConf
 import proplot as pplt
+from hal.config import cfg
+
 
 CBAR_WIDTH = 5 / 25.4
 
 
-pplt_cfg = OmegaConf.load("proplot_presets.yaml")
+pplt_cfg = OmegaConf.load(cfg.paths.root / "hal" / "fmt" / "proplot_presets.yaml")
 
 
 def load_pplt_config(preset="paper"):

@@ -2,4 +2,5 @@ mypy
 black
 flake8
 pylint
+isort
 mkdocs
