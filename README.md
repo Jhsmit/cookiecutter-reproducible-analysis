@@ -64,3 +64,6 @@ The directory structure of your new project looks like this:
 └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
 ```
+
+Note: when dask cluster has toolbox cached, changes made here are not directly propagated;
+this might lead to irreproducible results
