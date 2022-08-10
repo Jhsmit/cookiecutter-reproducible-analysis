@@ -1,12 +1,13 @@
+from functools import reduce
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from collections import OrderedDict
 
 import numpy as np
 
 
 def longpath(pth: Path) -> Path:
-    """Converts input `pth` to long path compatible format"""
+    """Converts input `pth` to long attr compatible format"""
     return Path(r"//?/" + str(pth))
 
 
@@ -15,7 +16,7 @@ def clean_types(d: Any) -> Any:
 
     Converts library specific types to python native types, including numpy dtypes,
     OrderedDict, numpy arrays
-    
+
     # https://stackoverflow.com/questions/59605943/python-convert-types-in-deeply-nested-dictionary-or-array
 
     """
@@ -42,3 +43,26 @@ def clean_types(d: Any) -> Any:
 
     else:
         return d
+
+# https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-subobjects-chained-properties/31174427#31174427
+def rsetattr(obj: Any, attr: str, val: Any) -> Any:
+    pre, _, post = attr.rpartition('.')
+    return setattr(rgetattr(obj, pre) if pre else obj, post, val)
+
+# https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-subobjects-chained-properties/31174427#31174427
+def rgetattr(obj: Any, attr: str, *default):
+    try:
+        return reduce(getattr, attr.split('.'), obj)
+    except AttributeError as e:
+        if default:
+            return default[0]
+        else:
+            raise e
+
+def rhasattr(obj: Any, attr:str):
+    try:
+        reduce(getattr, attr.split("."), obj)
+        return True
+    except AttributeError:
+        return False
+

@@ -22,6 +22,8 @@ class Paths(object):
     figures: Path
     """Absolute path of figure output directory"""
 
+    data: Path
+    """Absolute path of figure output directory"""
 
 @dataclass
 class TopLevelConf(object):
@@ -36,6 +38,7 @@ PATHS = Paths(
     src=root / "src",
     report=root / "report",
     figures=root / "report" / "figures",
+    data=root / "data"
 )
 
 toplevel = TopLevelConf(paths=PATHS)
