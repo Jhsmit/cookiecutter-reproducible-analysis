@@ -1,9 +1,8 @@
-import json
-import re
 import shutil
-from io import BytesIO, StringIO
 from pathlib import Path
-
+from io import StringIO, BytesIO
+import re
+import json
 import pandas as pd
 import yaml
 
@@ -159,7 +158,7 @@ def dataframe_to_stringio(
 
 
 def dataframe_to_file(
-    file_path, df, fmt="csv", include_metadata=True, include_version=False, **kwargs
+    file_path, df: pd.DataFrame, fmt: str = "csv", include_metadata:bool = True, include_version:bool=False, **kwargs
 ):
     """
     Save a pd.DataFrame to an io.StringIO object. Kwargs to read the resulting .csv object with pd.read_csv to

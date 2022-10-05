@@ -1,6 +1,6 @@
 #%%
-# from hal.config import cfg
-# from hal.repro import reproduce
+from hal.config import cfg
+from hal.repro import reproduce
 from pathlib import Path
 
 import numpy as np
@@ -15,8 +15,7 @@ packages = [
     "numpy",
 ]
 
-OUTPUT_PATH = cfg.paths.output / Path(__file__).stem
-reproduce(OUTPUT_PATH, globals(), packages=packages)
+OUTPUT_PATH = reproduce(globals(), packages=packages)
 
 
 #%%

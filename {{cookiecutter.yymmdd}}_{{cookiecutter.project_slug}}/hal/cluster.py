@@ -1,17 +1,15 @@
-import time
 import warnings
-from typing import Optional, Union
+from typing import Union, Optional
 
-from dask.distributed import Client, LocalCluster
+from dask.distributed import LocalCluster, Client
 from hal.config import cfg
-from omegaconf import OmegaConf
+import time
 from omegaconf.dictconfig import DictConfig
-
-kwargs = {"threads_per_worker": 1, "memory_limit": "25GB"}
+from omegaconf import OmegaConf
 
 
 def get_client(cluster_name: Optional[str] = None) -> Union[Client, None]:
-    """Attempts connect to a Dask cluster and returns the Client
+    """Attempts to connect to a Dask cluster and returns the Client
 
     """
     client = None
@@ -22,12 +20,12 @@ def get_client(cluster_name: Optional[str] = None) -> Union[Client, None]:
             except OSError:
                 continue
     else:
-        client = Client(cfg.clusters[cluster_name].address)
+        client = Client(cfg.clusters[cluster_name].address, timeout=5)
 
     return client
 
 
-def blocking_cluster(config: Union[dict, DictConfig]):
+def blocking_cluster(config: Union[dict, DictConfig]) -> None:
     """Start a dask LocalCluster and block until interrupted"""
 
     if isinstance(config, DictConfig):

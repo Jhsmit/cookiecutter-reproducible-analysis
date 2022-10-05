@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
+from pathlib import Path
+from dataclasses import dataclass
 
 from omegaconf import OmegaConf
 
@@ -19,11 +19,6 @@ class Paths(object):
     report: Path
     """Absolute path of the report directory"""
 
-    figures: Path
-    """Absolute path of figure output directory"""
-
-    data: Path
-    """Absolute path of figure output directory"""
 
 @dataclass
 class TopLevelConf(object):
@@ -37,8 +32,6 @@ PATHS = Paths(
     output=root / "output",
     src=root / "src",
     report=root / "report",
-    figures=root / "report" / "figures",
-    data=root / "data"
 )
 
 toplevel = TopLevelConf(paths=PATHS)

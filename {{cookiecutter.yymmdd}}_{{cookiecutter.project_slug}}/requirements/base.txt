@@ -1,4 +1,4 @@
-omegaconf>=2.2.1
+omegaconf>=2.2.3
 click
 typer
 invoke

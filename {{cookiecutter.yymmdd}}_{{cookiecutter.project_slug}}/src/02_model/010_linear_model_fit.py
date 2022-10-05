@@ -18,6 +18,4 @@ packages = [
     "numpy",
 ]
 
-OUTPUT_PATH = cfg.paths.output / Path(__file__).stem
-FIGURE_OUTPUT_PATH = cfg.paths.figures / Path(__file__).stem
-reproduce(OUTPUT_PATH, globals(), packages=packages)
+OUTPUT_PATH = reproduce(globals(), packages=packages)

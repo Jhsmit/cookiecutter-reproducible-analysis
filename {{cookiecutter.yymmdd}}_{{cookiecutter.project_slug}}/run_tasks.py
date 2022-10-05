@@ -1,69 +1,91 @@
+from __future__ import annotations
+
+
 import textwrap
+from dataclasses import dataclass
+from functools import partial
+from typing import Callable, Union
 
 import click
+
 from hal.cluster import blocking_cluster
 from hal.config import cfg
-from hal.tasks import *
+from hal.tasks import run_black, run_mypy, run_flake8, run_pylint, run_isort
 
-if __name__ == "__main__":
 
-    # implement OOP; recursive until hitting some callable?
-    # if only one option -> do that immediatly
+@dataclass
+class Task(object):
+    name: str
 
-    s = """
-    What would you like to do?
-    1. Run code
-    2. Start a cluster
-    3. Quality control
-    """
+    task: Callable
 
-    s = textwrap.dedent(s.lstrip("\n"))
-    value = click.prompt(s, type=int)
 
-    if value == 1:
-        ...
-        click.echo("Not implemented")
-        # TODO
-        # 1 run all (+start all clusters ? )
+@dataclass
+class TaskNode(object):
 
-        # 2 per script
-        # 1. data
-        # 2. model
-        # 3. view
-        # 01 ....
-    elif value == 2:
-        q = "Which cluster?"
-        options = list(cfg.clusters.keys())
-        option_text = [f"{i}. {option}" for i, option in enumerate(options, start=1)]
-        text = "\n".join([q] + option_text + [""])
+    name: str
 
-        value = click.prompt(text, type=int)
+    prompt: str
 
-        cluster_cfg = cfg.clusters[options[value - 1]]
-        # todo move blocking part here
-        blocking_cluster(cluster_cfg)
+    children: Union[list[Task], list[TaskNode]]
 
-    elif value == 3:
-        print("TODO: add isort")
-        s = """
-        Which function?
-        1. black
-        2. mypy
-        3. flake8
-        4. pylint
-        5. isort
-        """
+    def __iter__(self):
+        return self.children.__iter__()
 
-        s = textwrap.dedent(s.lstrip("\n"))
-        value = click.prompt(s, type=int)
+    def __len__(self):
+        return self.children.__len__()
 
-        if value == 1:
-            run_black()
-        elif value == 2:
-            run_mypy()
-        elif value == 3:
-            run_flake8()
-        elif value == 4:
-            run_pylint()
-        elif value == 5:
-            run_isort()
+    def __getitem__(self, item):
+        return self.children.__getitem__(item)
+
+
+names = cfg.clusters.keys()
+tasks = [partial(blocking_cluster, cluster_cfg) for cluster_cfg in cfg.clusters.values()]
+
+cluster_node = TaskNode(
+    prompt="Which cluster?",
+    name="Start a cluster",
+    children=[Task(name=name, task=partial(blocking_cluster, config)) for name, config in cfg.clusters.items()]
+)
+
+code_quality = {
+    'lack': run_black,
+    'mypy': run_mypy,
+    'flake8': run_flake8,
+    'pylint': run_pylint,
+    'isort': run_isort
+}
+
+quality_node = TaskNode(
+    prompt="Which One?",
+    name="Formatting/linting/type checking",
+    children=[Task(name=k, task=v) for k, v in code_quality.items()]
+)
+
+top_node = TaskNode(
+    prompt="What would you like to do?",
+    name="Top level",
+    children=[
+        Task(name="Run code (Not Implemented)", task=lambda: exec('raise(NotImplementedError("Running code not implemented"))')),
+        cluster_node,
+        quality_node
+    ]
+)
+
+
+def prompt(node: TaskNode) -> None:
+    while isinstance(node, TaskNode):
+        s = f"{node.prompt}\n" + \
+            "0. Exit\n" + \
+            "\n".join([f"{i}. {t.name}" for i, t in enumerate(node, start=1)]) + "\n"
+
+        value = click.prompt(s, type=click.IntRange(0, len(node)), prompt_suffix="")
+        if value == 0:
+            return
+        node = node[value - 1]
+
+    node.task()
+
+
+if __name__ == '__main__':
+    prompt(top_node)

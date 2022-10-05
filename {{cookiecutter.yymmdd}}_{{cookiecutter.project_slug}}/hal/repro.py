@@ -25,11 +25,14 @@ def gen_imports(globals_: dict) -> Generator:
 
 
 def reproduce(
-    output_path: Path,
     globals_: dict,
     packages: Optional[Iterable[str]] = None,
     **watermark_kwargs,
-) -> None:
+) -> Path:
+
+    script_path = Path(globals_['__file__'])
+    relpath = script_path.relative_to(cfg.paths.src)
+    output_path = cfg.paths.output / relpath.parent / relpath.stem
 
     rpr_path = output_path / "_rpr"
     rpr_path.mkdir(exist_ok=True, parents=True)
@@ -72,7 +75,7 @@ def reproduce(
 
     packages = ",".join(sorted(combined))
     dave_kwargs = dict(
-        author="Jochem H. Smit",
+        author="{{cookiecutter.author_name}}",
         current_time=True,
         current_date=True,
         timezone=True,
@@ -87,3 +90,5 @@ def reproduce(
     dave = watermark.watermark(globals_=globals_, packages=packages, **dave_kwargs)
 
     (rpr_path / "watermark.txt").write_text(dave)
+
+    return output_path
