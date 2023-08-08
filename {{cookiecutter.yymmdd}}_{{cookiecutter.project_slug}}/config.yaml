@@ -1,6 +1,8 @@
 paths:
   external_data: ''  # Optional path for external data
 
+# list of additional (editable installed) packages to watermark
+packages: []
 
 clusters:
   default:
