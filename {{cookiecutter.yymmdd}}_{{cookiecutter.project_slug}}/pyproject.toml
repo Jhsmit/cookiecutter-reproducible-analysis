@@ -1,12 +1,18 @@
 [tool.poetry]
-name = "src"
+name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
-authors = ["{{ cookiecutter.author_name }}"]
-licsense = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
+authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
+license = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
+packages = [
+    { include = "hal" },
+    { include = "src"},
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
+omegaconf = "^2.3.0"
+watermark = "^2.4.3"
 
 [tool.poetry.dev-dependencies]
 
