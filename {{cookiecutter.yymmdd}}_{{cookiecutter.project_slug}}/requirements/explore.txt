@@ -1,4 +1,0 @@
-# Requirements for interactive exploration
-panel
-hvplot
-holoviews

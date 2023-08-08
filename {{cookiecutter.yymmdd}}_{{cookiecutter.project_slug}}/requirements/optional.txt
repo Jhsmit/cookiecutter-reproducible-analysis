@@ -1,5 +1,0 @@
-natsort
-pytablewriter
-tqdm
-addict
-snakemd
