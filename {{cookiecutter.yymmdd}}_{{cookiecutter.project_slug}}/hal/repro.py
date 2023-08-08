@@ -1,15 +1,12 @@
 import distutils.sysconfig as sysconfig
-import os
 import shutil
 import sys
 from pathlib import Path
 from types import ModuleType
-from typing import Generator, Iterable, Optional, Union
+from typing import Generator, Iterable, Optional
 
-import click
 import watermark
 from hal.config import cfg
-from hal.tasks import export_env
 
 
 def gen_imports(globals_: dict) -> Generator:
@@ -29,20 +26,12 @@ def reproduce(
     packages: Optional[Iterable[str]] = None,
     **watermark_kwargs,
 ) -> Path:
-
-    script_path = Path(globals_['__file__'])
+    script_path = Path(globals_["__file__"])
     relpath = script_path.relative_to(cfg.paths.src)
     output_path = cfg.paths.output / relpath.parent / relpath.stem
 
     rpr_path = output_path / "_rpr"
     rpr_path.mkdir(exist_ok=True, parents=True)
-
-    env_name = Path(os.environ["CONDA_PREFIX"]).name
-    env_file = cfg.paths.root / "env" / f"{env_name}.yaml"
-    if not env_file.exists():
-        export_env()
-
-    script_path = Path(globals_["__file__"])
     script_target = rpr_path / script_path.name
 
     py_files = list(rpr_path.glob("*.py"))
@@ -60,7 +49,7 @@ def reproduce(
     for script in (cfg.paths.src / "toolbox").glob("*.py"):
         shutil.copy(script, tools_pth / script.name)
 
-    combined = set(packages or []) | set(gen_imports(globals_))
+    combined = set(packages or []) | set(gen_imports(globals_)) | set(cfg.packages)
 
     # Remove builtins
     combined -= {sys.builtin_module_names}
