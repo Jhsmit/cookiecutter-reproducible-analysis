@@ -8,6 +8,6 @@
     "yymmdd": "{% now 'local', '%y%m%d' %}",
     "_copy_without_render": [
         "*.ipynb",
-        "hal/**/*.py"
+        "hal/report.py"
     ]
 }
