@@ -41,28 +41,33 @@ def clean_types(d: Any) -> Any:
     if isinstance(d, dict):
         return {k: clean_types(v) for k, v in d.items()}
 
+    if isinstance(d, Path):
+        return str(d)
+
     else:
         return d
 
+
 # https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-subobjects-chained-properties/31174427#31174427
 def rsetattr(obj: Any, attr: str, val: Any) -> Any:
-    pre, _, post = attr.rpartition('.')
+    pre, _, post = attr.rpartition(".")
     return setattr(rgetattr(obj, pre) if pre else obj, post, val)
+
 
 # https://stackoverflow.com/questions/31174295/getattr-and-setattr-on-nested-subobjects-chained-properties/31174427#31174427
 def rgetattr(obj: Any, attr: str, *default):
     try:
-        return reduce(getattr, attr.split('.'), obj)
+        return reduce(getattr, attr.split("."), obj)
     except AttributeError as e:
         if default:
             return default[0]
         else:
             raise e
 
-def rhasattr(obj: Any, attr:str):
+
+def rhasattr(obj: Any, attr: str):
     try:
         reduce(getattr, attr.split("."), obj)
         return True
     except AttributeError:
         return False
-
