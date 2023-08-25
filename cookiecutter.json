@@ -7,6 +7,7 @@
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
     "yymmdd": "{% now 'local', '%y%m%d' %}",
     "_copy_without_render": [
-        "*.ipynb"
+        "*.ipynb",
+        "hal/**/*.py"
     ]
 }
