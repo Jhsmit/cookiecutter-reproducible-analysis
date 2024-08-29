@@ -1,21 +1,26 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
 name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
-authors = ["{{ cookiecutter.author_name }} <{{ cookiecutter.author_email }}>"]
+authors = [{ name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" }, ]
 license = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
 packages = [
     { include = "hal" },
-    { include = "src"},
+    { include = "ava"},
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.9"
-omegaconf = "^2.3.0"
-watermark = "^2.4.3"
+dependencies = [
+    "watermark",
+    "ipykernel",
+    "dacite",
+    "pyyaml",
+    "numpy",
+]
 
-[tool.poetry.dev-dependencies]
 
-[build-system]
-requires = ["poetry>=1.0.0"]
-build-backend = "poetry.masonry.api"
+[tool.hatch.build.targets.wheel]
+packages = ["hal", 'ava']

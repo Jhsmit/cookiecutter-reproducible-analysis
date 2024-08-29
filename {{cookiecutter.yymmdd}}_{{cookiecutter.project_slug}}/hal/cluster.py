@@ -1,17 +1,15 @@
-import warnings
-from typing import Union, Optional
-
-from dask.distributed import LocalCluster, Client
-from hal.config import cfg
 import time
-from omegaconf.dictconfig import DictConfig
-from omegaconf import OmegaConf
+import warnings
+from dataclasses import asdict
+from typing import Optional, Union
+
+from dask.distributed import Client, LocalCluster
+
+from hal.config import Cluster, cfg
 
 
 def get_client(cluster_name: Optional[str] = None) -> Union[Client, None]:
-    """Attempts to connect to a Dask cluster and returns the Client
-
-    """
+    """Attempts to connect to a Dask cluster and returns the Client"""
     client = None
     if cluster_name is None:
         for cluster_name in cfg.clusters:
@@ -25,11 +23,11 @@ def get_client(cluster_name: Optional[str] = None) -> Union[Client, None]:
     return client
 
 
-def blocking_cluster(config: Union[dict, DictConfig]) -> None:
+def blocking_cluster(config: Union[dict, Cluster]) -> None:
     """Start a dask LocalCluster and block until interrupted"""
 
-    if isinstance(config, DictConfig):
-        cfg_dic = OmegaConf.to_container(config)
+    if isinstance(config, Cluster):
+        cfg_dic = asdict(config)
     else:
         cfg_dic = config
 
@@ -51,4 +49,4 @@ def blocking_cluster(config: Union[dict, DictConfig]) -> None:
 
 
 if __name__ == "__main__":
-    blocking_cluster(cfg["cluster"])
+    blocking_cluster(cfg.clusters["default"])

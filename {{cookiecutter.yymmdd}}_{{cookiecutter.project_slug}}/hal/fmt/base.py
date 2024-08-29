@@ -1,14 +1,13 @@
 import proplot as pplt
+import yaml
+
 from hal.config import cfg
-from omegaconf import OmegaConf
 
-CBAR_WIDTH = 5 / 25.4
-
-
-pplt_cfg = OmegaConf.load(cfg.paths.root / "hal" / "fmt" / "proplot_presets.yaml")
+pplt_cfg = yaml.safe_load(
+    (cfg.root / "hal" / "fmt" / "proplot_presets.yaml").read_text()
+)
 
 
 def load_pplt_config(preset: str = "paper") -> None:
     dict_config = pplt_cfg[preset]
-    primitive = OmegaConf.to_container(dict_config)
-    pplt.rc.update(primitive)
+    pplt.rc.update(dict_config)

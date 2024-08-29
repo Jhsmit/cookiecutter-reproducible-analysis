@@ -1,46 +1,56 @@
-from typing import Optional
+# %%
+
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from dataclasses import dataclass
+from typing import Optional
 
-from omegaconf import OmegaConf
+import yaml
+from dacite import Config as DaciteConfig
+from dacite import from_dict
+from dacite.data import Data
 
+from hal.utils import clean_types
 
-@dataclass
-class Paths(object):
-    root: Path
-    """Absolute path of the root directory"""
-
-    output: Path
-    """Absolute path of the output directory"""
-
-    src: Path
-    """Absolute path of the src directory"""
-
-    report: Path
-    """Absolute path of the report directory"""
+ROOT = Path(__file__).parent.parent.absolute()
 
 
 @dataclass
-class TopLevelConf(object):
-    paths: Paths
+class Cluster:
+    address: str
+    n_workers: Optional[int] = None
+    threads_per_worker: Optional[int] = None
+    memory_limit: Optional[str] = None
 
 
-root = Path(__file__).parent.parent.absolute()
+@dataclass
+class Config:
+    root: Path = ROOT
+    paths: dict[str, Path] = field(default_factory=dict)
+    clusters: dict[str, Cluster] = field(default_factory=dict)
+    packages: list[str] = field(default_factory=list)
 
-PATHS = Paths(
-    root=root,
-    output=root / "output",
-    src=root / "src",
-    report=root / "report",
-)
+    @classmethod
+    def from_dict(cls, data: Data):
+        config = DaciteConfig(type_hooks={Path: lambda v: Path(v).expanduser()})
+        return from_dict(cls, data, config)
 
-toplevel = TopLevelConf(paths=PATHS)
+    @classmethod
+    def from_yaml(cls, fpath: Path):
+        data = yaml.safe_load(fpath.read_text())
+        return cls.from_dict(data)
 
-root_cfg = OmegaConf.load(PATHS.root / "config.yaml")
+    def to_yaml(self, fpath: Path) -> None:
+        s = yaml.dump(clean_types(asdict(self)), sort_keys=False)
+        fpath.write_text(s)
 
-# Convert entries in `paths` section to pathlib.Path objects
-for k, v in root_cfg["paths"].items():
-    root_cfg["paths"][k] = Path(v)
-path_cfg = OmegaConf.structured(toplevel)
+    def update(self, data: Data):
+        new_data = {**self.__dict__, **data}
 
-cfg = OmegaConf.merge(root_cfg, path_cfg)
+        # we use `from_dict` to cast to the correct types
+        new_cfg = Config.from_dict(new_data)
+        vars(self).update(vars(new_cfg))
+
+
+# %%
+cfg_fpath = ROOT / "config.yaml"
+cfg = Config.from_yaml(cfg_fpath)
