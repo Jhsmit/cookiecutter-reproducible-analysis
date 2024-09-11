@@ -20,27 +20,10 @@ The directory structure of your new project looks like this:
 ```
 
 ├── LICENSE
-├── Makefile           <- Makefile with commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 │
-├── archive            <- Folder with scripts of previous versions.
-│
-├── hal                <- Folder with general use (global) scripts.
-│
-├── data               <- Raw input data.
-│
-├── docs               <- A default MkDocs project
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, Markdown, PDF, LaTeX, etc.
-│
-├── env                <- Files required for recreating the environment, eg
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-├── src                <- Source code for use in this project.
-│   ├── __init__.py    <- Makes src a Python module
+├── ava                <- Source code for use in this project.
+│   ├── __init__.py    <- Makes a Python module
 |   |
 |   ├── 00_explore     <- Scripts/notebooks to (interactively) explore the data.
 │   │
@@ -52,9 +35,17 @@ The directory structure of your new project looks like this:
 |   |
 │   └── toolbox        <- general use scripts / functions specific to this project   
 │
-└── run_tasks          <- run scripts, start clusters, or code formatting
+├── data               <- Raw input data.
+│
+├── hal                <- Folder with general use (global) scripts.
+|
+├── output             <- Files required for recreating the environment, eg
+│
+├── env                <- Files required for recreating the environment, eg
+│                         generated with `pip freeze > requirements.txt`
+│
+├── pyproject.toml           <- makes project pip installable (pip install -e .) so src can be imported
+
+
 
 ```
-
-Note: when dask cluster has toolbox cached, changes made here are not directly propagated;
-this might lead to irreproducible results
