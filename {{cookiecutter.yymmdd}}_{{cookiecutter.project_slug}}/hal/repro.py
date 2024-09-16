@@ -58,7 +58,7 @@ def reproduce(
 
     packages = ",".join(sorted(combined))
     dave_kwargs = dict(
-        author="Jochem H. Smit",
+        author="{{ cookiecutter.author_name }}",
         current_time=True,
         current_date=True,
         timezone=True,
