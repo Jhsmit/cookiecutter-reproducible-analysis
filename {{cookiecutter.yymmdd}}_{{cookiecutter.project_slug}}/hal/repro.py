@@ -2,6 +2,7 @@ import distutils.sysconfig as sysconfig
 import subprocess
 import sys
 import zipfile
+from datetime import datetime
 from pathlib import Path
 from types import ModuleType
 from typing import Generator, Iterable, Optional
@@ -73,6 +74,15 @@ def reproduce(
 
     # Run the command and capture the output
     freeze = subprocess.run(["uv", "pip", "freeze"], capture_output=True, text=True)
+
+    # write to root freeze.txt file
+    if not freeze.stderr:
+        freeze_file = cfg.root / "freeze.txt"
+        with open(freeze_file, "w") as f:
+            f.write("# uv pip freeze output generated at ")
+            f.write(datetime.now().isoformat())
+            f.write("\n")
+            f.write(freeze.stdout)
 
     with zipfile.ZipFile(
         output_path / "_rpr.zip", "w", zipfile.ZIP_DEFLATED
