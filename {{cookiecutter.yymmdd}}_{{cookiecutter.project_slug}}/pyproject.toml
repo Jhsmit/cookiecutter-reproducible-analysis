@@ -3,23 +3,15 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
+license = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
+
 name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
-authors = [{ name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" }, ]
-license = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
-packages = [
-    { include = "hal" },
-    { include = "ava"},
+authors = [
+    { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
 ]
-
-dependencies = [
-    "watermark",
-    "ipykernel",
-    "dacite",
-    "pyyaml",
-    "numpy",
-]
+dependencies = ["watermark", "ipykernel", "dacite", "pyyaml", "numpy"]
 
 
 [tool.hatch.build.targets.wheel]

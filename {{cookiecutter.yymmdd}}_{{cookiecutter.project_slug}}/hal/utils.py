@@ -1,6 +1,6 @@
 from functools import reduce
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 from collections import OrderedDict
 
 import numpy as np

@@ -29,9 +29,13 @@ class Config:
     clusters: dict[str, Cluster] = field(default_factory=dict)
     packages: list[str] = field(default_factory=list)
 
+    @property
+    def ava(self) -> Path:
+        return self.root / "ava"
+
     @classmethod
     def from_dict(cls, data: Data):
-        config = DaciteConfig(type_hooks={Path: lambda v: Path(v).expanduser()})
+        config = DaciteConfig(type_hooks={Path: lambda v: Path(v).expanduser()})  # type: ignore
         return from_dict(cls, data, config)
 
     @classmethod
@@ -49,6 +53,13 @@ class Config:
         # we use `from_dict` to cast to the correct types
         new_cfg = Config.from_dict(new_data)
         vars(self).update(vars(new_cfg))
+
+    def prod_output_path(self, script_folder: str) -> Path:
+        pth = cfg.root / "ava" / "prod" / script_folder / "output"
+        if pth.exists():
+            return pth
+        else:
+            raise FileNotFoundError("Prod output path does not exist")
 
 
 # %%

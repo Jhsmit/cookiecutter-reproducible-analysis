@@ -1,13 +1,13 @@
-import proplot as pplt
+import ultraplot as uplt
 import yaml
 
 from hal.config import cfg
 
-pplt_cfg = yaml.safe_load(
-    (cfg.root / "hal" / "fmt" / "proplot_presets.yaml").read_text()
+uplt_cfg = yaml.safe_load(
+    (cfg.root / "hal" / "fmt" / "ultraplot_presets.yaml").read_text()
 )
 
 
 def load_pplt_config(preset: str = "paper") -> None:
-    dict_config = pplt_cfg[preset]
-    pplt.rc.update(dict_config)
+    dict_config = uplt_cfg[preset]
+    uplt.rc.update(dict_config)

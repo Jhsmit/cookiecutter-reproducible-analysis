@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     import pandas as pd  # type: ignore
     import polars as pl  # type: ignore
     from matplotlib.figure import Figure  # type: ignore
-    from slimfit.fitresult import FitResult  # type: ignore
+    from smitfit.fitresult import FitResult  # type: ignore
 
 
 SAVEFIG_KWARGS: dict[str, Any] = dict(dpi=300, transparent=True)
