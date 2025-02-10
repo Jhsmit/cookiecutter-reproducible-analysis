@@ -1,4 +1,5 @@
 import distutils.sysconfig as sysconfig
+import importlib
 import subprocess
 import sys
 import zipfile
@@ -39,8 +40,7 @@ def reproduce(
     **watermark_kwargs,
 ) -> Path:
     script_path = Path(globals_["__file__"])
-    relpath = script_path.relative_to(cfg.root / "ava")
-    output_path = cfg.root / "output" / relpath.parent / relpath.stem
+    output_path = script_path.parent / "output"
     output_path.mkdir(exist_ok=True, parents=True)
 
     combined = set(packages or []) | set(gen_imports(globals_))
@@ -53,12 +53,11 @@ def reproduce(
     stdlib = {p.stem.replace(".py", "") for p in Path(stdlib_pth).iterdir()}
     combined -= stdlib
 
-    # Remove hal
-    combined -= {"hal", "builtins", "src"}
+    # Remove hal/ava
+    combined -= {"hal", "builtins", "ava"}
 
-    packages = ",".join(sorted(combined))
-    dave_kwargs = dict(
-        author="{{ cookiecutter.author_name }}",
+    mark_kwargs = dict(
+        author="Jochem H. Smit",
         current_time=True,
         current_date=True,
         timezone=True,
@@ -69,11 +68,32 @@ def reproduce(
         machine=True,
     )
 
-    dave_kwargs.update(watermark_kwargs)
-    dave = watermark.watermark(globals_=globals_, packages=packages, **dave_kwargs)
+    mark_kwargs.update(watermark_kwargs)
+    mark = watermark.watermark(
+        globals_=globals_,
+        packages=",".join(sorted(combined)),
+        **mark_kwargs,  # type: ignore
+    )
+    # get __version__ manually for selected packages
+    versions = {}
+    for package in packages or []:
+        imported = importlib.import_module(package)
+        try:
+            versions[package] = imported.__version__
+        except AttributeError:
+            pass
+
+    # write to mark string
+    if versions:
+        mark += "\n\n"
+        mark += "Additional version information:\n"
+
+    for package, version in versions.items():
+        mark += f"\n{package}=={version}"
 
     # Run the command and capture the output
     freeze = subprocess.run(["uv", "pip", "freeze"], capture_output=True, text=True)
+    freeze_str = freeze.stdout
 
     # write to root freeze.txt file
     if not freeze.stderr:
@@ -82,15 +102,15 @@ def reproduce(
             f.write("# uv pip freeze output generated at ")
             f.write(datetime.now().isoformat())
             f.write("\n")
-            f.write(freeze.stdout)
+            f.write(freeze_str)
 
     with zipfile.ZipFile(
         output_path / "_rpr.zip", "w", zipfile.ZIP_DEFLATED
     ) as rpr_zip:
         rpr_zip.write(script_path, script_path.name)
-        rpr_zip.writestr("watermark.txt", dave)
+        rpr_zip.writestr("watermark.txt", mark)
 
-        rpr_zip.writestr("pip_freeze.txt", freeze.stdout)
+        rpr_zip.writestr("pip_freeze.txt", freeze_str)
         if freeze.stderr:
             rpr_zip.writestr("pip_freeze_error.txt", freeze.stderr)
 
