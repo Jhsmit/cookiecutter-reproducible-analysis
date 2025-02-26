@@ -96,13 +96,17 @@ def reproduce(
     freeze_str = freeze.stdout
 
     # write to root freeze.txt file
-    if not freeze.stderr:
+    if freeze_str:
         freeze_file = cfg.root / "freeze.txt"
         with open(freeze_file, "w") as f:
             f.write("# uv pip freeze output generated at ")
             f.write(datetime.now().isoformat())
             f.write("\n")
             f.write(freeze_str)
+
+            if freeze.stderr:
+                f.write("\n# Error:\n")
+                f.write(freeze.stderr)
 
     with zipfile.ZipFile(
         output_path / "_rpr.zip", "w", zipfile.ZIP_DEFLATED
