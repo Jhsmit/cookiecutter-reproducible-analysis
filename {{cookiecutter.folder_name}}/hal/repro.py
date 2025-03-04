@@ -34,6 +34,20 @@ def zipdir(path: Path, zipf: zipfile.ZipFile):
             zipf.write(file_path, file_path.relative_to(path.parent))
 
 
+def is_git_repo():
+    try:
+        # Run git command to check if we're in a git repository
+        subprocess.check_output(
+            ["git", "rev-parse", "--is-inside-work-tree"], stderr=subprocess.STDOUT
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+    except FileNotFoundError:
+        # Git command not found
+        return False
+
+
 def reproduce(
     globals_: dict,
     packages: Optional[Iterable[str]] = None,
@@ -57,16 +71,20 @@ def reproduce(
     combined -= {"hal", "builtins", "ava"}
 
     mark_kwargs = dict(
-        author="Jochem H. Smit",
+        author="{{ cookiecutter.author_name }}",
         current_time=True,
         current_date=True,
         timezone=True,
         updated=True,
         python=True,
-        conda=True,
-        githash=True,
         machine=True,
     )
+
+    if is_git_repo():
+        mark_kwargs.update(
+            githash=True,
+            gitbranch=True,
+        )
 
     mark_kwargs.update(watermark_kwargs)
     mark = watermark.watermark(

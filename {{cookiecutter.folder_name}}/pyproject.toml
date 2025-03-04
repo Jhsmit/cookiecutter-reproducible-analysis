@@ -9,7 +9,11 @@ name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
 authors = [
+    {% if cookiecutter.author_email %}
     { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
+    {% else %}
+    { name = "{{ cookiecutter.author_name }}" },
+    {% endif %}
 ]
 dependencies = ["watermark", "ipykernel", "dacite", "pyyaml", "numpy"]
 

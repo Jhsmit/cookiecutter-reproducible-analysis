@@ -2,12 +2,20 @@
     "project_name": "Project Name",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
     "author_name": "Jochem H. Smit",
-    "author_email": "jhsmit@gmail.com",
+    "author_email": "",
     "description": "A short description of the project.",
-    "open_source_license": ["MIT", "BSD-3-Clause", "No license file"],
+    "open_source_license": [
+        "MIT",
+        "BSD-3-Clause",
+        "No license file"
+    ],
+    "include_date_in_folder_name": [
+        "yes",
+        "no"
+    ],
     "yymmdd": "{% now 'local', '%y%m%d' %}",
+    "folder_name": "{% if cookiecutter.include_date_in_folder_name == 'yes' %}{{cookiecutter.yymmdd}}_{{cookiecutter.project_slug}}{% else %}{{cookiecutter.project_slug}}{% endif %}",
     "_copy_without_render": [
-        "*.ipynb",
-        "hal/report.py"
+        "*.ipynb"
     ]
 }
