@@ -31,7 +31,10 @@ The directory structure of your new project looks like this:
 ├── editable                    <- Folder with editable installed libraries.    
 │           
 ├── hal                         <- Folder with general use (global) scripts.
+│           
+├── metadata                    <- Metadata for the project
 |           
+├── config.yaml                 <- config settings available in hal.config.cfg object    
 ├── freeze.txt                  <- Output of pip freeze from the most recently ran script.    
 ├── pyproject.toml              <- makes project pip installable (pip install -e .) so ava can be imported
 
