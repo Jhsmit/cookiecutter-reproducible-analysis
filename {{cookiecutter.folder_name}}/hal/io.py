@@ -1,12 +1,11 @@
 """functions used to save results to disk"""
 
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable
-
+import narwhals as nw
 import yaml
 
 from hal.utils import clean_types
@@ -81,11 +80,8 @@ def save_and_close(
         plt.close(fig)
 
 
-def save_csv(df: pl.DataFrame | pd.DataFrame, file_path: Path):
-    if isinstance(df, pd.DataFrame):
-        df.to_csv(file_path)
-    else:
-        df.write_csv(file_path)
+def save_csv(df: pl.DataFrame | pd.DataFrame | nw.DataFrame, file_path: Path):
+    nw.from_native(df).write_csv(file_path)
 
 
 def save_fig(
