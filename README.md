@@ -1,14 +1,7 @@
 # cookiecutter-reproducible-analysis
 
-**WORK IN PROGRESS REPOSITORY**
-
 Cookiecutter for creating a project structure facilitating reproducible analysis 
 
-This is a derivation of: 
-
-https://github.com/drivendata/cookiecutter-data-science
-https://github.com/mkrapp/cookiecutter-reproducible-science
-https://github.com/timtroendle/cookiecutter-reproducible-research
 
 
 
@@ -139,3 +132,10 @@ for csv_file in input_files.glob("*.csv"):
 
 Aside from creating a output folder with the reprodicibility .zip file, we are also using the `Output` class to keep track of the scripts' expected output. If the `OVERWRITE` flag is set to `True`, `output.skip` always returns false thus each file in the for loop is processed. Otherwise, `output.skip` return `True` only if both expected output files exists. This is very useful for a scenario where more data is added to the 'external_data' folder such that the script only processes new data. On the other hand, if the script is updated the overwrite flag can be set to `True` to reprocess all data. Finally, the `output.done` flag is set to `True` if all expected output files are created. This is useful for checking if the script has finished processing all data.
 
+### Credits
+
+This cookiecutter is inspired by / derived from:
+
+https://github.com/drivendata/cookiecutter-data-science
+https://github.com/mkrapp/cookiecutter-reproducible-science
+https://github.com/timtroendle/cookiecutter-reproducible-research
