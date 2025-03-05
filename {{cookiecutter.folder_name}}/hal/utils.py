@@ -1,6 +1,6 @@
 from functools import reduce
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 from collections import OrderedDict
 
 import numpy as np
@@ -71,3 +71,20 @@ def rhasattr(obj: Any, attr: str):
         return True
     except AttributeError:
         return False
+
+T = TypeVar("T")
+
+def find_object(items: list[T], **kwargs) -> T:
+    """Find first object in `items` that matches all key-value pairs in `kwargs`"""
+    for item in items:
+        if all(getattr(item, key) == value for key, value in kwargs.items()):
+            return item
+    raise ValueError("Object not found")
+
+
+def find_index(items: list, **kwargs) -> int:
+    """Find index of first object in `items` that matches all key-value pairs in `kwargs`"""
+    for i, item in enumerate(items):
+        if all(getattr(item, key) == value for key, value in kwargs.items()):
+            return i
+    raise ValueError("Object not found")
