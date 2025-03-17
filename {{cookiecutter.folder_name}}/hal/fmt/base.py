@@ -8,6 +8,6 @@ uplt_cfg = yaml.safe_load(
 )
 
 
-def load_pplt_config(preset: str = "paper") -> None:
+def load_uplt_config(preset: str = "paper") -> None:
     dict_config = uplt_cfg[preset]
     uplt.rc.update(dict_config)
