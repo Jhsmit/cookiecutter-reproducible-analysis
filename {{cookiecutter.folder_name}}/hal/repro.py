@@ -25,13 +25,15 @@ def gen_imports(globals_: dict) -> Generator:
                 pass
 
 
-def zipdir(path: Path, zipf: zipfile.ZipFile):
+def zipdir(path: Path, zipf: zipfile.ZipFile, root: str = ""):
     for file_path in path.glob("**/*"):
         if "__pycache__" in file_path.parts:
             continue
 
+        root = root or path.stem
         if file_path.is_file():
-            zipf.write(file_path, file_path.relative_to(path.parent))
+            relpath = file_path.relative_to(path)
+            zipf.write(file_path, Path(root) / relpath)
 
 
 def is_git_repo():
@@ -126,10 +128,13 @@ def reproduce(
                 f.write("\n# Error:\n")
                 f.write(freeze.stderr)
 
+    script_root = script_path.parent
     with zipfile.ZipFile(
         output_path / "_rpr.zip", "w", zipfile.ZIP_DEFLATED
     ) as rpr_zip:
-        rpr_zip.write(script_path, script_path.name)
+        py_files = script_root.glob("**/*.py")
+        for f in py_files:
+            rpr_zip.write(f, f.relative_to(script_root))
         rpr_zip.writestr("watermark.txt", mark)
 
         rpr_zip.writestr("pip_freeze.txt", freeze_str)
@@ -138,6 +143,6 @@ def reproduce(
 
         toolbox_dir = cfg.root / "ava" / "toolbox"
         if toolbox_dir.exists():
-            zipdir(toolbox_dir, rpr_zip)
+            zipdir(toolbox_dir, rpr_zip, root="_toolbox")
 
     return output_path
