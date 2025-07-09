@@ -112,7 +112,9 @@ def reproduce(
         mark += f"\n{package}=={version}"
 
     # Run the command and capture the output
-    freeze = subprocess.run(["uv", "pip", "freeze"], capture_output=True, text=True)
+    freeze = subprocess.run(
+        ["uv", "pip", "freezeno-color"], capture_output=True, text=True
+    )
     freeze_str = freeze.stdout
 
     # write to root freeze.txt file
