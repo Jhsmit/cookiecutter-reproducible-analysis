@@ -113,7 +113,7 @@ def reproduce(
 
     # Run the command and capture the output
     freeze = subprocess.run(
-        ["uv", "pip", "freezeno-color"], capture_output=True, text=True
+        ["uv", "pip", "freeze", "--no-color"], capture_output=True, text=True
     )
     freeze_str = freeze.stdout
 
