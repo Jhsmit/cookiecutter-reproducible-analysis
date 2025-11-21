@@ -116,19 +116,26 @@ def reproduce(
         ["uv", "pip", "freeze", "--no-color"], capture_output=True, text=True
     )
     freeze_str = freeze.stdout
+    # remove editable packages from freeze output
+    lines = [line for line in freeze_str.splitlines() if not line.startswith("-e")]
+    freeze_no_editable = "\n".join(lines)
 
     # write to root freeze.txt file
-    if freeze_str:
+    if freeze_no_editable:
         freeze_file = cfg.root / "freeze.txt"
         with open(freeze_file, "w") as f:
             f.write("# uv pip freeze output generated at ")
             f.write(datetime.now().isoformat())
             f.write("\n")
-            f.write(freeze_str)
+            f.write(freeze_no_editable)
 
-            if freeze.stderr:
-                f.write("\n# Error:\n")
-                f.write(freeze.stderr)
+    if freeze.stderr:
+        freeze_error_file = cfg.root / "freeze_stderr.txt"
+        with open(freeze_error_file, "w") as f:
+            f.write("# uv pip freeze stderr output generated at ")
+            f.write(datetime.now().isoformat())
+            f.write("\n")
+            f.write(freeze.stderr)
 
     script_root = script_path.parent
     with zipfile.ZipFile(
