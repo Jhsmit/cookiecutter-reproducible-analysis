@@ -11,7 +11,8 @@ authors = [
     {% else %}
     { name = "{{ cookiecutter.author_name }}" },
     {% endif %}
-]name = "{{ cookiecutter.project_slug }}"
+]
+name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
 dependencies = [
