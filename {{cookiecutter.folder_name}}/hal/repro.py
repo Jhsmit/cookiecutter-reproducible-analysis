@@ -1,5 +1,6 @@
 import distutils.sysconfig as sysconfig
 import importlib
+import pkgutil
 import subprocess
 import sys
 import zipfile
@@ -59,7 +60,13 @@ def reproduce(
     output_path = script_path.parent / "output"
     output_path.mkdir(exist_ok=True, parents=True)
 
-    combined = set(packages or []) | set(gen_imports(globals_))
+    # get editable packages
+    editable_modules = [f for f in (cfg.root / "editable").iterdir() if f.is_dir()]
+    pkgs = pkgutil.iter_modules(editable_modules)
+    editable_packages = {p.name for p in pkgs}
+
+    # combine user packages, imported packages and editable packages
+    combined = set(packages or []) | set(gen_imports(globals_)) | editable_packages
 
     # Remove builtins
     combined -= {sys.builtin_module_names}
