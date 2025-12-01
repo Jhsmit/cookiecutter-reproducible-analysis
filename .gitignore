@@ -132,4 +132,4 @@ dmypy.json
 
 editable/
 data/
-.pptx
+*.pptx
