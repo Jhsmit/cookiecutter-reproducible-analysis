@@ -1,10 +1,9 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.13,<0.10.0"]
+build-backend = "uv_build"
 
 [project]
 license = '{% if cookiecutter.open_source_license == 'MIT' %}MIT{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}BSD-3{% endif %}'
-
 authors = [
     {% if cookiecutter.author_email %}
     { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
@@ -15,7 +14,10 @@ authors = [
 name = "{{ cookiecutter.project_slug }}"
 version = "0.1.0"
 description = "{{ cookiecutter.description }}"
+requires-python = ">={{ cookiecutter.python_version_number }}"
+
 dependencies = [
+    "hal",
     "watermark",
     "ipykernel",
     "dacite",
@@ -24,6 +26,12 @@ dependencies = [
     "narwhals",
 ]
 
+[project.optional-dependencies]
+plot = ["ultraplot>=1.66.0"]
 
-[tool.hatch.build.targets.wheel]
-packages = ["hal", 'ava']
+[tool.uv.build-backend]
+module-name = ['src', 'ava']
+module-root = '.'
+
+[tool.uv.sources]
+hal = { git = "https://github.com/Jhsmit/hal", rev = "aaeb94a1a1a0dd60459a472491f2a67539348e03" }

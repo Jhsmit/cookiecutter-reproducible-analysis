@@ -4,6 +4,7 @@
     "author_name": "Jochem H. Smit",
     "author_email": "",
     "description": "A short description of the project.",
+    "python_version_number": "3.12",
     "open_source_license": [
         "MIT",
         "BSD-3-Clause",

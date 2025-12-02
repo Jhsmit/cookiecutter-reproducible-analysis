@@ -6,37 +6,32 @@ Cookiecutter for creating a project structure facilitating reproducible analysis
 
 ## The resulting directory structure
 
-The directory structure of your new project looks like this: 
+The directory structure of your new project (after installation) looks like this: 
 
 ```
 
 ├── LICENSE
 ├── README.md                   <- The top-level README for developers using this project.
 │           
-├── ava                         <- Source code for use in this project.
+├── src                         <- Source code for use in this project.
 │   ├── __init__.py             <- Makes a Python module
 |   |           
-|   ├── prod                    <- Folder with 'final' production scripts
-│   │   └── script_x            <- folder containing one script / analysis module
-│   │      ├── output           <- output folder for this module
-│   │      │    └── _rpr.zip    <- reproducibility archive
-│   │      └── main.py          <- script / analysis module
-│   │           
-│   ├── stage                   <- Staging area.
-│   │           
-│   ├── toolbox                 <- General use classes/functions/constants.
-│           
+|   └── parse_data              <- Folder a set of related scripts / analysis modules.
+│      ├── output              <- output folder for this module
+│      │    └── _rpr.zip       <- reproducibility archive
+│      └── main.py             <- folder containing one script / analysis module
+
 ├── data                        <- Raw input data (small files only).
 │           
 ├── editable                    <- Folder with editable installed libraries.    
 │           
-├── hal                         <- Folder with general use (global) scripts.
+├── ava                         <- Folder with general use (global) scripts.
 │           
 ├── metadata                    <- Metadata for the project
 |           
 ├── config.yaml                 <- config settings available in hal.config.cfg object    
-├── freeze.txt                  <- Output of pip freeze from the most recently ran script.    
-├── pyproject.toml              <- makes project pip installable (pip install -e .) so ava can be imported
+├── uv.lock                     <- lockfile created and used by uv to create reproducible environments
+├── pyproject.toml              <- defines the project and sources for uv to create a uv.lock file
 
 
 ```
@@ -45,29 +40,79 @@ The directory structure of your new project looks like this:
 
 Install `cookiecutter`, then run: 
 
-    cookiecutter gh:jhsmit/cookiecutter-reproducible-analysis
+```bash
+$ cookiecutter gh:jhsmit/cookiecutter-reproducible-analysis
+```
 
-CD into the newly created directory, then create and activate your venv. 
+CD into the newly created directory and then:
 
 Install the project:
 
-    uv pip install -e .
+```bash
+$ uv sync
+```
+
+This will download and install the [HAL](https://github.com/Jhsmit/hal) general utility and reproducibility library from GitHub as well as the other basic dependencies. 
+
+Initiate git:
+
+```bash
+$ git init
+```
+
+You can add a remote repository if you want or the project as a local git repository. In either case, make sure to back up your work regularly!
+
+> [!CAUTION]
+> Ideally, scripts should be backed up on a remote git repository, and script output should be backed up on a cloud storage solution or institutional storage. I haven't yet found a good solution which automatically backs up script output while ignoring the .venv folder. If you have any suggestions, please open an issue on GitHub.
+
+### Adding dependencies
+
+To keep the output reproducible, dependencies are managed via `uv` to ensure they are recorded in the lockfile. 
+
+To add a new dependency from PyPI:
+
+```bash
+$ uv add package_name
+```
+
+To add a new dependency from a git repository:
+
+```bash
+uv add git+https://github.com/OpenSMFS/FRETBursts --rev 929ff403a6731c9474740dd5514f48ddb72f4a6a
+```
+
+Make sure to include the exact commit sha in the `--rev` argument to ensure reproducibility.
+
+For adding dependencies from other sources see the UV docs on [dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-sources). 
 
 
-Checkout any libraries you want to use in editable mode, eg
-
-    git checkout https://github.com/Jhsmit/dont-fret.git editable/dont-fret
-
-Install any editable library:
-
-    uv pip install -e editable/dont-fret
+### Using the editable folder. 
 
 
-Create/copy a folder in the 'stage' directory, when you are happy with the script, move it to the 'prod' folder. 
+The `editable` folder is intended to contain libraries you are actively developing while working on this project. To add a library to this folder, first clone it there, and then install via uv. 
+
+For example, to add the `dont-fret` library:
+
+```bash
+$ git clone https://github.com/Jhsmit/dont-fret.git editable/dont-fret
+```
+
+
+Then to install:
+
+```bash
+uv add ./editable/dont-fret
+```
+
+The reproducibility script from the `hal` library will then also record the version of the currently checked out code in the `dont-fret` library when running scripts.
+
+> [!NOTE]
+> that it is recommended to only use editable libraries in development and rather use fixed version from PyPI or git repos for production / final analyses.
+
 
 ## Reproducibility
 
-Each folder has a script (`main.py`) which generates some output in the corresponding `output` folder. To make scripts reproducible, use the following code snippet:
+Each folder has one or more scripts which generate some output in the corresponding `output` folder. To make scripts reproducible, use the following code snippet:
 
 ```python
 
@@ -78,7 +123,7 @@ OUTPUT_PATH = reproduce(globals(), packages=packages)
 
 ```
 
-The `reproduce` function will create a zip file in the `output` folder with the name `_rpr.zip`. This zip file contains the script, the current toolbox, and the versions of the packages used. The returned constant `OUTPUT_PATH` is the path to the output folder.
+The `reproduce` function will create a zip file in the `output` folder with the name `_rpr.zip`. This zip file contains the script, the current `ava`, and the versions of the packages used. The returned constant `OUTPUT_PATH` is the path to the output folder.
 
 
 ## Output
