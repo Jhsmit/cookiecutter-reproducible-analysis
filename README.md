@@ -11,27 +11,28 @@ The directory structure of your new project (after installation) looks like this
 ```
 
 ├── LICENSE
-├── README.md                   <- The top-level README for developers using this project.
-│           
-├── src                         <- Source code for use in this project.
-│   ├── __init__.py             <- Makes a Python module
-|   |           
-|   └── parse_data              <- Folder a set of related scripts / analysis modules.
-│      ├── output              <- output folder for this module
-│      │    └── _rpr.zip       <- reproducibility archive
-│      └── main.py             <- folder containing one script / analysis module
-
-├── data                        <- Raw input data (small files only).
-│           
-├── editable                    <- Folder with editable installed libraries.    
-│           
-├── ava                         <- Folder with general use (global) scripts.
-│           
-├── metadata                    <- Metadata for the project
-|           
-├── config.yaml                 <- config settings available in hal.config.cfg object    
-├── uv.lock                     <- lockfile created and used by uv to create reproducible environments
-├── pyproject.toml              <- defines the project and sources for uv to create a uv.lock file
+├── README.md                                      <- The top-level README for developers using this project.
+│                              
+├── src                                            <- Source code for use in this project.
+│   ├── __init__.py                                <- Makes a Python module.
+|   |                              
+|   └── parse_data                                 <- Folder a set of related scripts / analysis modules.
+│      ├── output                                  <- output folder for this module.
+│      │    ├── _rpr.zip                           <- reproducibility archive.
+|      |    └── _data_sources_main.zip             <- snapshot of input data files used.
+│      └── main.py                                 <- folder containing one script / analysis module
+├── data                                           <- Raw input data.
+│                              
+├── editable                                       <- Folder with editable installed libraries.    
+│                              
+├── ava                                            <- Folder with general use (global) scripts.
+│    └── __init__.py                               <- Makes a Python module.
+│                              
+├── metadata                                       <- Metadata for the project
+|                              
+├── config.yaml                                    <- config settings available in hal.config.cfg object    
+├── uv.lock                                        <- lockfile created and used by uv to create reproducible environments
+└── pyproject.toml                                 <- defines the project and sources for uv to create a uv.lock file
 
 
 ```
@@ -110,12 +111,23 @@ The reproducibility script from the `hal` library will then also record the vers
 > that it is recommended to only use editable libraries in development and rather use fixed version from PyPI or git repos for production / final analyses.
 
 
+## General use scripts and constants
+
+The `ava` module is intended to contain general use scripts and constants which are used across multiple analysis modules. 
+
+
+## Configuration and data sources
+
+The `hal` packages provides a `cfg` object which is automatically populated from the `config.yaml` file in the project root. 
+
+The `cfg.paths` is a special dictionary-like object which keeps track of key access. This dict is to be used to define paths to data sources and their state is automatically recorded in the reproducibility archive created when running scripts.
+
+
 ## Reproducibility
 
-Each folder has one or more scripts which generate some output in the corresponding `output` folder. To make scripts reproducible, use the following code snippet:
+Each folder has one or more scripts which generate output in the corresponding `output` folder. To make scripts reproducible, use the following code snippet:
 
 ```python
-
 from hal.repro import reproduce
 
 packages = ["numpy", "dont_fret", "smitfit"]
@@ -123,7 +135,16 @@ OUTPUT_PATH = reproduce(globals(), packages=packages)
 
 ```
 
-The `reproduce` function will create a zip file in the `output` folder with the name `_rpr.zip`. This zip file contains the script, the current `ava`, and the versions of the packages used. The returned constant `OUTPUT_PATH` is the path to the output folder.
+The reproduce script runs at script exit and has the following functionality:
+
+ - Create a folder `output` in the script directory and return the `OUTPUT_PATH` constant pointing to this folder.
+ - Creating a `_rpr.zip` file in the output folder containing:
+    - A copy of the script being run.
+    - A copy of the current `ava` package.
+    - A copy of the uv.lock file used to create the environment.
+    - A watermark file containing information on the machine on which the script was run, the date and time, the versions of imported packages, manually specified packages, and the git hash and output of git status. 
+- Creating a `_data_sources_main.zip` file in the containing a list of files in each of the data folders used as input in the script. 
+
 
 
 ## Output
@@ -139,7 +160,6 @@ from hal.io import Output, save_fig, save_yaml
 from hal.config import cfg
 from hal.repro import reproduce
 
-packages = ["numpy", "dont_fret", "smitfit"]
 OUTPUT_PATH = reproduce(globals(), packages=packages)
 OVERWRITE = False  # set to True to overwrite existing files
 
@@ -177,6 +197,21 @@ for csv_file in input_files.glob("*.csv"):
 ```
 
 Aside from creating a output folder with the reprodicibility .zip file, we are also using the `Output` class to keep track of the scripts' expected output. If the `OVERWRITE` flag is set to `True`, `output.skip` always returns false thus each file in the for loop is processed. Otherwise, `output.skip` return `True` only if both expected output files exists. This is very useful for a scenario where more data is added to the 'external_data' folder such that the script only processes new data. On the other hand, if the script is updated the overwrite flag can be set to `True` to reprocess all data. Finally, the `output.done` flag is set to `True` if all expected output files are created. This is useful for checking if the script has finished processing all data.
+
+
+## Plotting and formatting
+
+By default, `ultraplot` is used for generating plot output. It listed by default as optional dependency but if you generate production code that relies on `ultraplot` it should be moved to the main dependencies in `pyproject.toml`.
+
+
+Plot settings presets are defined in `ultraplot_presets.yaml`. To use these presets, import them via:
+
+```python
+from hal.uplot_fmt import load_uplt_config
+
+load_uplt_config("paper")
+```
+
 
 ### Credits
 
