@@ -137,6 +137,7 @@ OUTPUT_PATH = reproduce(globals(), packages=packages)
 
 The reproduce script runs at script exit and has the following functionality:
 
+ - Warns the users when running without a git repository or uncommitted changes in the git repository.
  - Create a folder `output` in the script directory and return the `OUTPUT_PATH` constant pointing to this folder.
  - Creating a `_rpr.zip` file in the output folder containing:
     - A copy of the script being run.
@@ -144,6 +145,15 @@ The reproduce script runs at script exit and has the following functionality:
     - A copy of the uv.lock file used to create the environment.
     - A watermark file containing information on the machine on which the script was run, the date and time, the versions of imported packages, manually specified packages, and the git hash and output of git status. 
 - Creating a `_data_sources_main.zip` file in the containing a list of files in each of the data folders used as input in the script. 
+
+
+### Why not just rely on git and `uv.lock`?
+
+In principle, if everything is committed to git and the uv.lock file is available, the project should be fully reproducible. However, in practise there are a couple of scenarios where this is not the case:
+
+- Running script_1, then later working on script_2 and updating the general use `ava` module. 
+- In an analysis script, using `Path.iterdir()` or `Path.glob()` to read files, then later adding new files to the data folder. 
+- Not commiting changes to git before running a script. Yes, this happens more often than you think!
 
 
 
