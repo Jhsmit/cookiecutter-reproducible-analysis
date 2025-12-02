@@ -34,4 +34,4 @@ module-name = ['src', 'ava']
 module-root = '.'
 
 [tool.uv.sources]
-hal = { git = "https://github.com/Jhsmit/hal", rev = "aaeb94a1a1a0dd60459a472491f2a67539348e03" }
+hal = { git = "https://github.com/Jhsmit/hal", rev = "f9073a9abf6cdee1974301ab87f2cebeee657c42" }
