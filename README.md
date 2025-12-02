@@ -11,8 +11,13 @@ The directory structure of your new project (after installation) looks like this
 ```
 
 ├── LICENSE
-├── README.md                                      <- The top-level README for developers using this project.
-│                              
+├── README.md                                      <- The top-level README with project information.
+├── log.md                                         <- The top-level README with project information.
+├── config.yaml                                    <- config settings available in hal.config.cfg object    
+├── uv.lock                                        <- lockfile created and used by uv to create reproducible environments
+├── pyproject.toml                                 <- defines the project and sources for uv to create a uv.lock file
+├── ultraplot_presets.yaml                         <- plotting presets for ultraplot
+│
 ├── src                                            <- Source code for use in this project.
 │   ├── __init__.py                                <- Makes a Python module.
 |   |                              
@@ -25,16 +30,10 @@ The directory structure of your new project (after installation) looks like this
 │                              
 ├── editable                                       <- Folder with editable installed libraries.    
 │                              
-├── ava                                            <- Folder with general use (global) scripts.
-│    └── __init__.py                               <- Makes a Python module.
-│                              
-├── metadata                                       <- Metadata for the project
-|                              
-├── config.yaml                                    <- config settings available in hal.config.cfg object    
-├── uv.lock                                        <- lockfile created and used by uv to create reproducible environments
-└── pyproject.toml                                 <- defines the project and sources for uv to create a uv.lock file
-
-
+└── ava                                            <- Folder with general use (global) scripts.
+     └── __init__.py                               <- Makes a Python module.
+                            
+                     
 ```
 
 ## Usage
