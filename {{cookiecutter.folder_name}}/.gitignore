@@ -165,3 +165,7 @@ output/
 
 # jupyter book output
 _build/
+
+editable/
+data/
+*.pptx
