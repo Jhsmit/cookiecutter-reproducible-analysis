@@ -152,10 +152,11 @@ The reproduce script runs at script exit and has the following functionality:
 In principle, if everything is committed to git and the uv.lock file is available, the project should be fully reproducible. However, in practise there are a couple of scenarios where this is not the case:
 
 - Running script_1, then later working on script_2 and updating the general use `ava` module. 
+- Installing new packages or updating after running a script. 
 - In an analysis script, using `Path.iterdir()` or `Path.glob()` to read files, then later adding new files to the data folder. 
-- Not commiting changes to git before running a script. Yes, this happens more often than you think!
+- Not committing changes to git before running a script. Yes, this happens more often than you think!
 
-
+`hal` will warn you if you're running your script with uncomitted changes. If you want to be extra strict, you can set the environment variable `FORCE_CLEAN_GIT=1` to make this a hard error.
 
 ## Output
 
