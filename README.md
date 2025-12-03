@@ -12,7 +12,7 @@ The directory structure of your new project (after installation) looks like this
 
 ├── LICENSE
 ├── README.md                                      <- The top-level README with project information.
-├── log.md                                         <- The top-level README with project information.
+├── log.md                                         <- Log file to keep track of updates and notes.
 ├── config.yaml                                    <- config settings available in hal.config.cfg object    
 ├── uv.lock                                        <- lockfile created and used by uv to create reproducible environments
 ├── pyproject.toml                                 <- defines the project and sources for uv to create a uv.lock file
@@ -25,13 +25,14 @@ The directory structure of your new project (after installation) looks like this
 │      ├── output                                  <- output folder for this module.
 │      │    ├── _rpr.zip                           <- reproducibility archive.
 |      |    └── _data_sources_main.zip             <- snapshot of input data files used.
-│      └── main.py                                 <- folder containing one script / analysis module
-├── data                                           <- Raw input data.
-│                              
+│      └── main.py                                 <- analysis script
+│
+├── ava                                            <- Folder with general use (global) scripts.
+│    └── __init__.py                               <- Makes a Python module.
+├── data                                           <- Raw input data.                              
 ├── editable                                       <- Folder with editable installed libraries.    
-│                              
-└── ava                                            <- Folder with general use (global) scripts.
-     └── __init__.py                               <- Makes a Python module.
+├── report                                         <- Report output (e.g. Jupyter notebooks, presentations, markdown).
+
                             
                      
 ```
@@ -54,7 +55,7 @@ $ uv sync
 
 This will download and install the [HAL](https://github.com/Jhsmit/hal) general utility and reproducibility library from GitHub as well as the other basic dependencies. 
 
-Initiate git:
+Next, initiate git:
 
 ```bash
 $ git init
